@@ -1,5 +1,9 @@
 import './globals.css'
 
+import { Maven_Pro } from '@next/font/google'
+const maven = Maven_Pro({
+  subsets:['latin'],
+})
 export default function RootLayout({
   children,
 }: {
@@ -12,7 +16,9 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body>{children}</body>
+      <body className={maven.className}>
+        {children}
+      </body>
     </html>
   )
 }
