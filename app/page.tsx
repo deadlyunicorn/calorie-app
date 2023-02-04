@@ -4,36 +4,41 @@ import Link from "next/link"
 import React, { useEffect,useRef,useState } from "react"
 
 
+
+interface NutrientKeys{
+  'calories':string;
+  'carbs':string;
+  'fat':string;
+  'protein':string;
+
+} 
+
 export default function Home() {
 
 
 
-  const inputRef = useRef({
-    calories:"",
-    carbs:"",
-    fat:"",
-    protein:"",
-  });
-  const [rerender,setRerender]=useState(true);
 
+
+  const inputRef = useRef({
+    nutrients:{
+      calories:"",
+      carbs:"",
+      fat:"",
+      protein:"",
+  },
+  });
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>,label:keyof NutrientKeys) =>{
+    inputRef.current.nutrients[label] = e.target.value;
+  }
+
+
+  const [rerender,setRerender]=useState(true);
+  
   useEffect(()=>{
     console.log("rendered")
   },[rerender])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>,whichInput:string) =>{
-      if (whichInput=="calories"){
-        inputRef.current.calories = e.target.value
-      }
-      else if (whichInput=="carbs"){
-        inputRef.current.carbs = e.target.value
-      }
-      else if (whichInput=="fat"){
-        inputRef.current.fat = e.target.value
-      }
-      else if (whichInput=="protein"){
-        inputRef.current.protein = e.target.value
-      }
-    }
 
 
 
@@ -70,28 +75,30 @@ export default function Home() {
             <div className="h-10">
             [Calories] <br/>
 
-            {inputRef.current.calories}
+            {inputRef.current.nutrients["calories"]}
             </div>
           </div>
           <div className="overflow-hidden border-t border-black py-2">
             <div className="h-10">
             
             [Carbs] <br/>
-            {inputRef.current.carbs}
+            {inputRef.current.nutrients["carbs"]}
+
             </div>
           </div>
           <div className="overflow-hidden border-t border-black py-2">
             <div className="h-10">
             
             [Fat] <br/>
-            {inputRef.current.fat}
+            {inputRef.current.nutrients["fat"]}
             </div>
           </div>
           <div className="overflow-hidden border-t border-black py-2">
             <div className="h-10">
             
             [Protein] <br/>
-            {inputRef.current.protein}
+            {inputRef.current.nutrients["protein"]}
+
             </div>
           </div>  
         </div>
@@ -120,7 +127,6 @@ export default function Home() {
               <button
                 className="bg-white mt-1 p-1 rounded-lg border-l-2 border-t border-black active:border-0"
                 onClick={()=>{
-                  setRerender(!rerender);
                   }}>
                 Click Me
               </button>
@@ -142,7 +148,7 @@ export default function Home() {
 }
 
 
-function InputField({label,handleChange}:{label:string, handleChange:(e:React.ChangeEvent<HTMLInputElement>, label:string) => void}){
+function InputField({label,handleChange}:{label:keyof NutrientKeys, handleChange:(e:React.ChangeEvent<HTMLInputElement>, label:keyof NutrientKeys) => void}){
   return(
     <>
     <p>{label}</p>
