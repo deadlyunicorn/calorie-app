@@ -5,12 +5,14 @@ import React, { useEffect,useRef,useState } from "react"
 
 
 
+
 interface NutrientKeys{
   'calories':string;
   'carbs':string;
   'fat':string;
   'protein':string;
 } 
+
 
 interface Nutrients{
   nutrients:{
@@ -21,11 +23,38 @@ interface Nutrients{
 },
 }
 
+
+const Target={
+  nutrients:{
+    calories:"1850",
+    carbs:"160",
+    fat:"60",
+    protein:"160",
+  }
+}
+
+const Varience={
+  nutrients:{
+    calories:{
+      high:"2000",
+      low:"1700"
+    },
+    carbs:{
+      high:"170",
+      low:"150"
+    },
+    fat:{
+      high:"70",
+      low:"50"
+    },
+    protein:{
+      high:"175",
+      low:"145"
+    },
+  }
+}
+
 export default function Home() {
-
-
-
-
 
   const inputRef:React.MutableRefObject<Nutrients> = useRef({
     nutrients:{
@@ -54,20 +83,19 @@ export default function Home() {
 
   return (
     <>
-    <div className="min-h-[40px] bg-green-100 flex flex-col items-center p-2 gap-2">
-      <div className="border-b border-black ">
-        <p>Here we display your last [thing to add]</p>
+    <div className="min-h-[40px] bg-gradient-to-b from-purple-700 to-purple-800 text-white flex flex-col items-center p-2 gap-2 rounded-lg">
+      <div className="border-b border-blue-600 ">
+        <p>Compare your results</p>
       </div>
-
       <div className="w-full">
-        <div className="grid grid-cols-3 gap-2 border-red-200 border text-center ">
-          <div className="border-r overflow-hidden">
+        <div className="grid grid-cols-3 gap-2   text-center rounded-xl text-white drop-shadow-2xl font-semibold">
+          <div className="overflow-hidden rounded-xl ">
             <button className="w-full"><Link href="/">Yesterday</Link></button>
           </div>
-          <div className="overflow-hidden">
-            <button className="w-full"><Link href="/">Today</Link></button>
+          <div className=" overflow-hidden rounded-xl ">
+            <button className="w-full bg-gradient-to-r from-green-400   to-blue-500"><Link href="/">Today</Link></button>
           </div>
-          <div className="border-l overflow-hidden">
+          <div className=" overflow-hidden rounded-xl ">
             <button className="w-full"><Link href="/">Tomorrow</Link></button>
           </div>
         </div>
@@ -75,41 +103,25 @@ export default function Home() {
     </div>
 
 
-        <div className="grid grid-cols-3 text-center  pt-2 mt-2 bg-green-100 rounded-lg border">
-          <div className="border-4 grid grid-rows-4">
+
+
+        <div className="flex flex-col text-center  pt-2 mt-2 bg-gradient-to-b from-purple-800 to-blue-800 rounded-lg text-white">
+
+        <div className="flex flex-col">
+          <div className="p-1">
             <p>Results</p>
+          </div>
+          
           <DisplayField inputRef={inputRef} label="calories"/>
 
           <DisplayField inputRef={inputRef} label="carbs"/>
           <DisplayField inputRef={inputRef} label="fat"/>
           <DisplayField inputRef={inputRef} label="protein"/>
           </div>
-
-          <div className="border-4 grid grid-rows-4">
-            <p>Target</p>
-          <DisplayField inputRef={inputRef} label="calories"/>
-
-          <DisplayField inputRef={inputRef} label="carbs"/>
-          <DisplayField inputRef={inputRef} label="fat"/>
-          <DisplayField inputRef={inputRef} label="protein"/>
-          </div>
-
-          <div className="border-4 grid grid-rows-4">
-            <p>Varience</p>
-          <DisplayField inputRef={inputRef} label="calories"/>
-
-          <DisplayField inputRef={inputRef} label="carbs"/>
-          <DisplayField inputRef={inputRef} label="fat"/>
-          <DisplayField inputRef={inputRef} label="protein"/>
-          </div>
-
-
-
-
         </div>
 
-        <div className="grid grid-rows-3 bg-green-100 mt-2 text-center">
-          <div className="overflow-hidden  border-t border-black py-2 flex flex-col items-center">
+        <div className="flex flex-col bg-gradient-to-b from-blue-800 to-purple-800 mt-2 text-center rounded-lg text-white">
+          <div className="overflow-hidden py-2 flex flex-col items-center">
             <div>
 
             <p>[Results]</p>
@@ -129,10 +141,10 @@ export default function Home() {
 
             <br/>
 
-            <div className="h-10 ">
+            <div className="h-10 text-white">
 
               <button
-                className="bg-white mt-1 p-1 rounded-lg border-l-2 border-t border-black active:border-0"
+                className="bg-gradient-to-br from-green-300 to-blue-400 mt-1 py-1 px-2 rounded-xl  border-t-2 border-purple-500 active:border-0 font-semibold"
                 onClick={()=>{
                   setRerender(!rerender);
                   }}>
@@ -142,14 +154,36 @@ export default function Home() {
 
           
           </div>
-          <div className="overflow-hidden  border-t border-black py-2">
-            [Target]
-          </div>
-          <div className="overflow-hidden  border-t border-black py-2">
-            [Variance]
-          </div>
+
         </div>
-    
+            
+        <div className="text-center m-2 text-pink-400">How are results calculated?</div>
+        
+        <div className="grid grid-cols-2 text-center   mt-2 bg-gradient-to-b from-purple-800 to-blue-900 rounded-lg text-white">
+                
+          {/*  */}
+          <div className="flex flex-col border-r border-purple-500 ">
+            <div className="pb-2 pt-2">
+              <p>Target</p>
+            </div>
+            <TargetField label={"calories"} />
+            <TargetField label={"carbs"} />
+            <TargetField label={"fat"} />
+            <TargetField label={"protein"} />
+          </div>
+          {/*  */}
+          <div className="flex flex-col ">
+            <div className="pb-2 pt-2">  
+              <p>Varience</p>
+            </div>
+            <VarienceField label={"calories"}/>
+            <VarienceField label={"carbs"}/>
+            <VarienceField label={"fat"}/>
+            <VarienceField label={"protein"}/>
+          </div>
+
+
+        </div>
     </>
 
   )
@@ -161,6 +195,7 @@ function InputField({label,handleChange}:{label:keyof NutrientKeys, handleChange
     <>
     <p>{label}</p>
     <input
+    className="rounded-lg p-1 font-mono font-thin bg-gradient-to-b from-indigo-300 to-indigo-400"
     onChange={(e)=>{handleChange(e,label)}}
     type="number"/>
     </>
@@ -171,12 +206,39 @@ function InputField({label,handleChange}:{label:keyof NutrientKeys, handleChange
 function DisplayField({inputRef,label}:{inputRef: React.MutableRefObject<Nutrients>,label:keyof NutrientKeys}){
   return(
     <>
-      <div className="overflow-hidden border-t border-black py-2">
-        <div className="h-10">
-          [{label}]<br/>
+      <div className="overflow-hidden border-t border-purple-500 py-2 rounded-lg ">
+        <div className="h-10 ">
+          {/* use green blue red? below */}
+          <span className="text-red-400">[{label}] this is what failed will look like</span><br/>
           {inputRef.current.nutrients[label]}
         </div>
       </div>
+    </>
+  )
+}
+
+function TargetField({label}:{label:keyof NutrientKeys}){
+  return(
+    <>
+      <div className="overflow-hidden border-t border-purple-500 py-2">
+        <div className="h-10">
+          [{label}]<br/>
+          {Target.nutrients[label]}
+        </div>
+      </div>
+    </>
+  )
+}
+
+function VarienceField({label}:{label:keyof NutrientKeys}){
+  return(
+    <>
+      <div className="overflow-hidden border-t border-purple-500 py-2">
+        <div className="h-10">
+          [{label}]<br/>
+          {Varience.nutrients[label]["low"]}&nbsp;-&nbsp;{Varience.nutrients[label]["high"]}
+        </div>
+      </div>    
     </>
   )
 }
