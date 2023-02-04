@@ -10,8 +10,16 @@ interface NutrientKeys{
   'carbs':string;
   'fat':string;
   'protein':string;
-
 } 
+
+interface Nutrients{
+  nutrients:{
+    calories:string,
+    carbs:string,
+    fat:string,
+    protein:string,
+},
+}
 
 export default function Home() {
 
@@ -19,7 +27,7 @@ export default function Home() {
 
 
 
-  const inputRef = useRef({
+  const inputRef:React.MutableRefObject<Nutrients> = useRef({
     nutrients:{
       calories:"",
       carbs:"",
@@ -27,6 +35,7 @@ export default function Home() {
       protein:"",
   },
   });
+
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>,label:keyof NutrientKeys) =>{
     inputRef.current.nutrients[label] = e.target.value;
@@ -38,7 +47,6 @@ export default function Home() {
   useEffect(()=>{
     console.log("rendered")
   },[rerender])
-
 
 
 
@@ -67,40 +75,37 @@ export default function Home() {
     </div>
 
 
-        <div className="grid grid-rows-4 text-center  pt-2 mt-2 bg-green-100 rounded-lg border">
-          <div>
-            <p>[Average]</p>
-          </div>
-          <div className="overflow-hidden border-t border-black py-2">
-            <div className="h-10">
-            [Calories] <br/>
+        <div className="grid grid-cols-3 text-center  pt-2 mt-2 bg-green-100 rounded-lg border">
+          <div className="border-4 grid grid-rows-4">
+            <p>Results</p>
+          <DisplayField inputRef={inputRef} label="calories"/>
 
-            {inputRef.current.nutrients["calories"]}
-            </div>
+          <DisplayField inputRef={inputRef} label="carbs"/>
+          <DisplayField inputRef={inputRef} label="fat"/>
+          <DisplayField inputRef={inputRef} label="protein"/>
           </div>
-          <div className="overflow-hidden border-t border-black py-2">
-            <div className="h-10">
-            
-            [Carbs] <br/>
-            {inputRef.current.nutrients["carbs"]}
 
-            </div>
-          </div>
-          <div className="overflow-hidden border-t border-black py-2">
-            <div className="h-10">
-            
-            [Fat] <br/>
-            {inputRef.current.nutrients["fat"]}
-            </div>
-          </div>
-          <div className="overflow-hidden border-t border-black py-2">
-            <div className="h-10">
-            
-            [Protein] <br/>
-            {inputRef.current.nutrients["protein"]}
+          <div className="border-4 grid grid-rows-4">
+            <p>Target</p>
+          <DisplayField inputRef={inputRef} label="calories"/>
 
-            </div>
-          </div>  
+          <DisplayField inputRef={inputRef} label="carbs"/>
+          <DisplayField inputRef={inputRef} label="fat"/>
+          <DisplayField inputRef={inputRef} label="protein"/>
+          </div>
+
+          <div className="border-4 grid grid-rows-4">
+            <p>Varience</p>
+          <DisplayField inputRef={inputRef} label="calories"/>
+
+          <DisplayField inputRef={inputRef} label="carbs"/>
+          <DisplayField inputRef={inputRef} label="fat"/>
+          <DisplayField inputRef={inputRef} label="protein"/>
+          </div>
+
+
+
+
         </div>
 
         <div className="grid grid-rows-3 bg-green-100 mt-2 text-center">
@@ -108,6 +113,8 @@ export default function Home() {
             <div>
 
             <p>[Results]</p>
+
+
 
             <InputField label="calories" handleChange={handleInputChange}/>
             
@@ -127,6 +134,7 @@ export default function Home() {
               <button
                 className="bg-white mt-1 p-1 rounded-lg border-l-2 border-t border-black active:border-0"
                 onClick={()=>{
+                  setRerender(!rerender);
                   }}>
                 Click Me
               </button>
@@ -157,5 +165,18 @@ function InputField({label,handleChange}:{label:keyof NutrientKeys, handleChange
     type="number"/>
     </>
     
+  )
+}
+
+function DisplayField({inputRef,label}:{inputRef: React.MutableRefObject<Nutrients>,label:keyof NutrientKeys}){
+  return(
+    <>
+      <div className="overflow-hidden border-t border-black py-2">
+        <div className="h-10">
+          [{label}]<br/>
+          {inputRef.current.nutrients[label]}
+        </div>
+      </div>
+    </>
   )
 }
