@@ -121,11 +121,17 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col bg-gradient-to-b from-blue-800 to-purple-800 mt-2 text-center rounded-lg text-white">
+          
           <div className="overflow-hidden py-2 flex flex-col items-center">
+            <form
+            onSubmit={(event)=>{
+              event.preventDefault();//prevents page reload
+              setRerender(!rerender);
+            }}>
+
             <div>
 
             <p>[Results]</p>
-
 
 
             <InputField label="calories" handleChange={handleInputChange}/>
@@ -135,7 +141,6 @@ export default function Home() {
             <InputField label="fat" handleChange={handleInputChange}/>
 
             <InputField label="protein" handleChange={handleInputChange}/>
-
             </div>
 
 
@@ -144,20 +149,18 @@ export default function Home() {
             <div className="h-10 text-white">
 
               <button
-                className="bg-gradient-to-br from-green-300 to-blue-400 mt-1 py-1 px-2 rounded-xl  border-t-2 border-purple-500 active:border-0 font-semibold"
-                onClick={()=>{
-                  setRerender(!rerender);
-                  }}>
+                className="bg-gradient-to-br from-green-300 to-blue-400 mt-1 py-1 px-2 rounded-xl  border-t-2 border-purple-500 active:border-0 font-semibold">
+
                 Click Me
               </button>
             </div>
 
+          </form>
           
           </div>
-
         </div>
             
-        <div className="text-center m-2 text-pink-400">How are results calculated?</div>
+        <div className="text-center m-2 text-pink-400">How are results highlighted?</div>
         
         <div className="grid grid-cols-2 text-center   mt-2 bg-gradient-to-b from-purple-800 to-blue-900 rounded-lg text-white">
                 
@@ -195,10 +198,11 @@ function InputField({label,handleChange}:{label:keyof NutrientKeys, handleChange
     <>
     <p>{label}</p>
     <input
-    className="rounded-lg p-1 font-mono font-thin bg-gradient-to-b from-indigo-300 to-indigo-400"
+    className="rounded-lg p-1 font-mono font-thin bg-gradient-to-b from-indigo-300 to-indigo-400 w-24"
     onChange={(e)=>{handleChange(e,label)}}
     type="number"
-    max={+Varience.nutrients[label]["high"]*3}/>
+    max={+Varience.nutrients[label]["high"]*3}
+    min="0"/>
     </>
     
   )
@@ -206,21 +210,9 @@ function InputField({label,handleChange}:{label:keyof NutrientKeys, handleChange
 
 function DisplayField({inputRef,label}:{inputRef: React.MutableRefObject<Nutrients>,label:keyof NutrientKeys}){
 
-  const errorDisplay =()=>{
-    return(
-    <>
-      <span className="text-white"> 
-      Please check your values again...
-      </span>
-    </>
-
-    )}
-
     const resultEffectDisplay=()=>{
-      if (+inputRef.current.nutrients[label]<0){
-        return errorDisplay()
-      }
-      else if ((+inputRef.current.nutrients[label]<+Varience.nutrients[label]["low"])){
+
+      if ((+inputRef.current.nutrients[label]<+Varience.nutrients[label]["low"])){
         return (
           <span className="text-yellow-400">
           {inputRef.current.nutrients[label]}
@@ -234,14 +226,13 @@ function DisplayField({inputRef,label}:{inputRef: React.MutableRefObject<Nutrien
           </span>
         )
       }
-      else if (+inputRef.current.nutrients[label]<+Varience.nutrients[label]["high"]*4){
+      else{
         return (
           <span className="text-red-400">
           {inputRef.current.nutrients[label]}
           </span>
         )
       }
-      else return(errorDisplay())
     }
 
       return(
@@ -268,7 +259,7 @@ function TargetField({label}:{label:keyof NutrientKeys}){
       <div className="overflow-hidden border-t border-purple-500 py-2">
         <div className="h-10">
           [{label}]<br/>
-          {Target.nutrients[label]}
+        <span className="text-green-400">~{Target.nutrients[label]}</span>
         </div>
       </div>
     </>
@@ -281,7 +272,7 @@ function VarienceField({label}:{label:keyof NutrientKeys}){
       <div className="overflow-hidden border-t border-purple-500 py-2">
         <div className="h-10">
           [{label}]<br/>
-          {Varience.nutrients[label]["low"]}&nbsp;-&nbsp;{Varience.nutrients[label]["high"]}
+          <span className="text-yellow-400">&lt;{Varience.nutrients[label]["low"]}</span>&nbsp;|&nbsp;<span className="text-red-400">&gt;{Varience.nutrients[label]["high"]}</span>
         </div>
       </div>    
     </>
