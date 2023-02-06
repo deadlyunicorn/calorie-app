@@ -206,15 +206,51 @@ function InputField({label,handleChange}:{label:keyof NutrientKeys, handleChange
 
 function DisplayField({inputRef,label}:{inputRef: React.MutableRefObject<Nutrients>,label:keyof NutrientKeys}){
 
-  const finalDisplay = (color:string)=>{
+  const errorDisplay =()=>{
+    return(
+    <>
+      <span className="text-white"> 
+      Please check your values again...
+      </span>
+    </>
+
+    )}
+
+    const resultEffectDisplay=()=>{
+      if (+inputRef.current.nutrients[label]<0){
+        return errorDisplay()
+      }
+      else if ((+inputRef.current.nutrients[label]<+Varience.nutrients[label]["low"])){
+        return (
+          <span className="text-yellow-400">
+          {inputRef.current.nutrients[label]}
+          </span>
+        )
+        }
+      else if (+inputRef.current.nutrients[label]<+Varience.nutrients[label]["high"]){
+        return (
+          <span className="text-green-400">
+          {inputRef.current.nutrients[label]}
+          </span>
+        )
+      }
+      else if (+inputRef.current.nutrients[label]<+Varience.nutrients[label]["high"]*4){
+        return (
+          <span className="text-red-400">
+          {inputRef.current.nutrients[label]}
+          </span>
+        )
+      }
+      else return(errorDisplay())
+    }
+
       return(
         <>
           <div className="overflow-hidden border-t border-purple-500 py-2 rounded-lg">
             <div className="h-12 text-lg ">
-              {/* use green blue red? below */}
-              <span className="text-white">[{label}] </span> <span className={`text-${color}-400`}><br/>
-              {inputRef.current.nutrients[label]}
-              </span>
+              <span className="text-white">[{label}] </span><br/> 
+              {resultEffectDisplay()}
+
               
               
     
@@ -222,36 +258,6 @@ function DisplayField({inputRef,label}:{inputRef: React.MutableRefObject<Nutrien
           </div>
         </>
       )
-  }
-
-  const errorDisplay =()=>{
-    return(
-      <>
-      <div className="overflow-hidden border-t border-purple-500 py-2 rounded-lg">
-        <div className="h-12 text-lg ">
-          {/* use green blue red? below */}
-          <span className="text-white">[{label}] </span><br/>
-          Please check your values again...
-        </div>
-      </div>
-    </>
-
-    )
-  }
-
-  if (+inputRef.current.nutrients[label]<0){
-    return errorDisplay()
-  }
-  else if ((+inputRef.current.nutrients[label]<+Varience.nutrients[label]["low"])){
-    return finalDisplay("yellow");
-    }
-  else if (+inputRef.current.nutrients[label]<+Varience.nutrients[label]["high"]){
-    return finalDisplay("green");
-  }
-  else if (+inputRef.current.nutrients[label]<+Varience.nutrients[label]["high"]*4){
-    return finalDisplay("red");
-  }
-  else return(errorDisplay())
 
 }
 
