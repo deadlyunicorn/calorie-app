@@ -197,25 +197,64 @@ function InputField({label,handleChange}:{label:keyof NutrientKeys, handleChange
     <input
     className="rounded-lg p-1 font-mono font-thin bg-gradient-to-b from-indigo-300 to-indigo-400"
     onChange={(e)=>{handleChange(e,label)}}
-    type="number"/>
+    type="number"
+    max={+Varience.nutrients[label]["high"]*3}/>
     </>
     
   )
 }
 
 function DisplayField({inputRef,label}:{inputRef: React.MutableRefObject<Nutrients>,label:keyof NutrientKeys}){
-  return(
-    <>
-      <div className="overflow-hidden border-t border-purple-500 py-2 rounded-lg ">
-        <div className="h-10 ">
+
+  const finalDisplay = (color:string)=>{
+      return(
+        <>
+          <div className="overflow-hidden border-t border-purple-500 py-2 rounded-lg">
+            <div className="h-12 text-lg ">
+              {/* use green blue red? below */}
+              <span className="text-white">[{label}] </span> <span className={`text-${color}-400`}><br/>
+              {inputRef.current.nutrients[label]}
+              </span>
+              
+              
+    
+            </div>
+          </div>
+        </>
+      )
+  }
+
+  const errorDisplay =()=>{
+    return(
+      <>
+      <div className="overflow-hidden border-t border-purple-500 py-2 rounded-lg">
+        <div className="h-12 text-lg ">
           {/* use green blue red? below */}
-          <span className="text-red-400">[{label}] this is what failed will look like</span><br/>
-          {inputRef.current.nutrients[label]}
+          <span className="text-white">[{label}] </span><br/>
+          Please check your values again...
         </div>
       </div>
     </>
-  )
+
+    )
+  }
+
+  if (+inputRef.current.nutrients[label]<0){
+    return errorDisplay()
+  }
+  else if ((+inputRef.current.nutrients[label]<+Varience.nutrients[label]["low"])){
+    return finalDisplay("yellow");
+    }
+  else if (+inputRef.current.nutrients[label]<+Varience.nutrients[label]["high"]){
+    return finalDisplay("green");
+  }
+  else if (+inputRef.current.nutrients[label]<+Varience.nutrients[label]["high"]*4){
+    return finalDisplay("red");
+  }
+  else return(errorDisplay())
+
 }
+
 
 function TargetField({label}:{label:keyof NutrientKeys}){
   return(
